@@ -1,14 +1,10 @@
 import React from 'react';
-
-import { Text, View } from 'react-native';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-import Home from './components/Home';
-
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
+import Home from '../components/Home';
 
 const Stack = createStackNavigator();
 

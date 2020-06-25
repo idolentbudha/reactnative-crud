@@ -1,49 +1,57 @@
-import {Component, useContext} from 'react';
-import {Button,StyleSheet, Text, View} from 'react-native';
-
-import {Card,CardSection,Spinner} from './common';
-import { LoginContext } from '../provider/LoginProvider';
-import Axios from 'axios';
-import {BASE_URL} from '../config/Constants'
-
-
+import React,{Component} from 'react';
+import {Text, View} from 'react-native';
+import {Card,CardSection} from './common';
+import axios from 'axios';
+import CONSTANTS from '../config/Constants'
+import {AuthContext} from '../context/Context';
 
 class Home extends Component {
-    state = { data: [] }
     
-    componentWillUnmount(){
-        const loginResponse = useContext(LoginContext);
-        Axios.defaults.headers.common['Authorization'] = loginResponse.token;
-        Axios.get(BASE_URL+'home')
-        .then( (response) => {
-            if(response.status){
-                this.state.data = response.data.data;
-            }
+    static contextType = AuthContext;
 
+    state ={
+        data:[]
+    }
+
+    componentWillMount(){
+        const {token} = this.context
+
+        const  header ={ headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+        }}
+
+        const bodyParameters = {
+            key: 'value'
+        }
+        
+        axios.get(
+            `${CONSTANTS.BASE_URL}home`,
+            bodyParameters,
+            header
+        )
+        .then( (response) => {
+            if(response.status == 200){
+                this.setState({data: response.data.data.information});
+            }
         })
-        .catch();
+        .catch((error)=>{
+            console.log(error.response.data)
+        });
     }
 
     render(){
-        return (
-            <View>
-                <Card>
-                    <CardSection>
-                        <Text>{this.state.data.information}</Text>
-                    </CardSection>
-                </Card>
-            </View>
+        return (                
+                <View>
+                    <Card>
+                        <CardSection>
+                            <Text>{this.state.data}
+                            </Text>
+                        </CardSection>
+                    </Card>
+                </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    errorTextStyle:{
-        fontSize:20,
-        alignSelf:'center',
-        color: 'red'
-    }
-});
-
 
 export default Home;

@@ -1,10 +1,25 @@
-import * as React from 'react';
-import Router from './src/Router';
+import React,{Component} from 'react';
+import Router from './src/navigation/Router';
+import {AuthContext} from './src/context/Context';
 
-function App() {
-  return (
-      <Router/>
-  );
+class App extends Component {
+  
+  setToken = token => {
+    this.setState({ token });
+  };
+
+  state = {
+    token: "",
+    setToken: this.setToken
+  };
+
+  render(){
+    return (
+      <AuthContext.Provider value={this.state} >
+        <Router/>
+      </AuthContext.Provider>
+      );
+  }
 }
 
 export default App;
